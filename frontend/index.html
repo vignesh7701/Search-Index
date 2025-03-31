@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Test</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .search-container {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <h1>Product Search</h1>
+        <input type="text" id="searchQuery" placeholder="Enter product name..." />
+        <button onclick="performSearch()">Search</button>
+        <div class="results" id="results"></div>
+    </div>
+
+    <script>
+        async function performSearch() {
+            const query = document.getElementById('searchQuery').value;
+            const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            displayResults(data);
+        }
+
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+            if (data.count > 0) {
+                data.data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.textContent = item.prodName;
+                    resultsDiv.appendChild(div);
+                });
+            } else {
+                resultsDiv.textContent = 'No results found.';
+            }
+        }
+    </script>
+</body>
+</html>
